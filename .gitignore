@@ -1,0 +1,6 @@
+target/
+.mvn-runtime/
+data/
+*.log
+.idea/
+*.zip

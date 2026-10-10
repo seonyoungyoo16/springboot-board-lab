@@ -1,0 +1,708 @@
+{
+  "repo": "https://github.com/seonyoungyoo16/springboot-board-lab",
+  "revision": null,
+  "title": "Spring Boot Board Lab",
+  "tables": [
+    {
+      "name": "app_users",
+      "entity": "AppUser",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primary": true,
+          "nullable": false
+        },
+        {
+          "name": "display_name",
+          "type": "VARCHAR(80)",
+          "primary": false,
+          "nullable": false
+        }
+      ],
+      "relations": [],
+      "unique": [],
+      "source": {
+        "file": "src/main/resources/schema.sql",
+        "line": 1,
+        "entityFile": "src/main/java/dev/portfolio/board/AppUser.java",
+        "entityLine": 6
+      }
+    },
+    {
+      "name": "posts",
+      "entity": "Post",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primary": true,
+          "nullable": false
+        },
+        {
+          "name": "author_id",
+          "type": "BIGINT",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR(120)",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "body",
+          "type": "VARCHAR(10000)",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "version",
+          "type": "BIGINT",
+          "primary": false,
+          "nullable": false
+        }
+      ],
+      "relations": [
+        {
+          "name": "fk_posts_author",
+          "from": "posts",
+          "column": "author_id",
+          "to": "app_users",
+          "referencedColumn": "id",
+          "cardinality": "N:1",
+          "line": 12
+        }
+      ],
+      "unique": [],
+      "source": {
+        "file": "src/main/resources/schema.sql",
+        "line": 5,
+        "entityFile": "src/main/java/dev/portfolio/board/Post.java",
+        "entityLine": 7
+      }
+    },
+    {
+      "name": "comments",
+      "entity": "Comment",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primary": true,
+          "nullable": false
+        },
+        {
+          "name": "post_id",
+          "type": "BIGINT",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "author_id",
+          "type": "BIGINT",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "body",
+          "type": "VARCHAR(1000)",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "primary": false,
+          "nullable": false
+        }
+      ],
+      "relations": [
+        {
+          "name": "fk_comments_post",
+          "from": "comments",
+          "column": "post_id",
+          "to": "posts",
+          "referencedColumn": "id",
+          "cardinality": "N:1",
+          "line": 20
+        },
+        {
+          "name": "fk_comments_author",
+          "from": "comments",
+          "column": "author_id",
+          "to": "app_users",
+          "referencedColumn": "id",
+          "cardinality": "N:1",
+          "line": 21
+        }
+      ],
+      "unique": [],
+      "source": {
+        "file": "src/main/resources/schema.sql",
+        "line": 14,
+        "entityFile": "src/main/java/dev/portfolio/board/Comment.java",
+        "entityLine": 7
+      }
+    },
+    {
+      "name": "post_likes",
+      "entity": "PostLike",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT",
+          "primary": true,
+          "nullable": false
+        },
+        {
+          "name": "post_id",
+          "type": "BIGINT",
+          "primary": false,
+          "nullable": false
+        },
+        {
+          "name": "user_id",
+          "type": "BIGINT",
+          "primary": false,
+          "nullable": false
+        }
+      ],
+      "relations": [
+        {
+          "name": "fk_likes_post",
+          "from": "post_likes",
+          "column": "post_id",
+          "to": "posts",
+          "referencedColumn": "id",
+          "cardinality": "N:1",
+          "line": 27
+        },
+        {
+          "name": "fk_likes_user",
+          "from": "post_likes",
+          "column": "user_id",
+          "to": "app_users",
+          "referencedColumn": "id",
+          "cardinality": "N:1",
+          "line": 28
+        }
+      ],
+      "unique": [
+        {
+          "name": "uq_post_like",
+          "columns": [
+            "post_id",
+            "user_id"
+          ]
+        }
+      ],
+      "source": {
+        "file": "src/main/resources/schema.sql",
+        "line": 23,
+        "entityFile": "src/main/java/dev/portfolio/board/PostLike.java",
+        "entityLine": 6
+      }
+    }
+  ],
+  "relations": [
+    {
+      "name": "fk_posts_author",
+      "from": "posts",
+      "column": "author_id",
+      "to": "app_users",
+      "referencedColumn": "id",
+      "cardinality": "N:1",
+      "line": 12
+    },
+    {
+      "name": "fk_comments_post",
+      "from": "comments",
+      "column": "post_id",
+      "to": "posts",
+      "referencedColumn": "id",
+      "cardinality": "N:1",
+      "line": 20
+    },
+    {
+      "name": "fk_comments_author",
+      "from": "comments",
+      "column": "author_id",
+      "to": "app_users",
+      "referencedColumn": "id",
+      "cardinality": "N:1",
+      "line": 21
+    },
+    {
+      "name": "fk_likes_post",
+      "from": "post_likes",
+      "column": "post_id",
+      "to": "posts",
+      "referencedColumn": "id",
+      "cardinality": "N:1",
+      "line": 27
+    },
+    {
+      "name": "fk_likes_user",
+      "from": "post_likes",
+      "column": "user_id",
+      "to": "app_users",
+      "referencedColumn": "id",
+      "cardinality": "N:1",
+      "line": 28
+    }
+  ],
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/users",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 17
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/posts",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 18
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/posts/{id}",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 19
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/posts",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 20
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/posts/{id}",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 21
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/posts/{id}",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 22
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/posts/{id}/comments",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 23
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/posts/{id}/comments",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 24
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/posts/{id}/comments/{commentId}",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 25
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/posts/{id}/comments/{commentId}",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 26
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/posts/{id}/likes/me",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 27
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/posts/{id}/likes/me",
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardController.java",
+        "line": 28
+      }
+    }
+  ],
+  "operations": [
+    {
+      "id": "create",
+      "title": "글 작성",
+      "method": "create",
+      "tables": [
+        "app_users",
+        "posts"
+      ],
+      "steps": [
+        {
+          "label": "작성자 조회",
+          "table": "app_users"
+        },
+        {
+          "label": "게시글 INSERT",
+          "table": "posts"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 43
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 43,
+          "code": "new Post(user(actor)"
+        },
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 43,
+          "code": "posts.saveAndFlush"
+        }
+      ]
+    },
+    {
+      "id": "update",
+      "title": "글 수정",
+      "method": "update",
+      "tables": [
+        "app_users",
+        "posts"
+      ],
+      "steps": [
+        {
+          "label": "작성자 확인",
+          "table": "app_users"
+        },
+        {
+          "label": "버전 확인 후 UPDATE",
+          "table": "posts"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 44
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 45,
+          "code": "owner(p.author.getId(), actor)"
+        },
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 46,
+          "code": "!p.version.equals(version)"
+        },
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 47,
+          "code": "p.title = title.trim()"
+        }
+      ]
+    },
+    {
+      "id": "delete",
+      "title": "글 삭제",
+      "method": "delete",
+      "tables": [
+        "comments",
+        "post_likes",
+        "posts"
+      ],
+      "steps": [
+        {
+          "label": "댓글 DELETE",
+          "table": "comments"
+        },
+        {
+          "label": "좋아요 DELETE",
+          "table": "post_likes"
+        },
+        {
+          "label": "게시글 DELETE · commit",
+          "table": "posts"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 49
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 51,
+          "code": "comments.deleteByPostId(id)"
+        },
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 51,
+          "code": "likes.deleteByPostId(id)"
+        },
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 51,
+          "code": "posts.delete(p)"
+        }
+      ]
+    },
+    {
+      "id": "comment",
+      "title": "댓글 작성",
+      "method": "addComment",
+      "tables": [
+        "posts",
+        "app_users",
+        "comments"
+      ],
+      "steps": [
+        {
+          "label": "게시글 확인·잠금",
+          "table": "posts"
+        },
+        {
+          "label": "작성자 조회",
+          "table": "app_users"
+        },
+        {
+          "label": "댓글 INSERT",
+          "table": "comments"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 55
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 55,
+          "code": "new Comment(p, user(actor), body.trim())"
+        }
+      ]
+    },
+    {
+      "id": "commentUpdate",
+      "title": "댓글 수정",
+      "method": "updateComment",
+      "tables": [
+        "posts",
+        "app_users",
+        "comments"
+      ],
+      "steps": [
+        {
+          "label": "소속 게시글 확인",
+          "table": "posts"
+        },
+        {
+          "label": "작성자 확인",
+          "table": "app_users"
+        },
+        {
+          "label": "댓글 UPDATE",
+          "table": "comments"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 56
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 56,
+          "code": "comment(id, commentId)"
+        },
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 56,
+          "code": "c.body = body.trim()"
+        }
+      ]
+    },
+    {
+      "id": "commentDelete",
+      "title": "댓글 삭제",
+      "method": "deleteComment",
+      "tables": [
+        "posts",
+        "app_users",
+        "comments"
+      ],
+      "steps": [
+        {
+          "label": "소속 게시글 확인",
+          "table": "posts"
+        },
+        {
+          "label": "작성자 확인",
+          "table": "app_users"
+        },
+        {
+          "label": "댓글 DELETE",
+          "table": "comments"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 57
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 57,
+          "code": "comments.delete(c)"
+        }
+      ]
+    },
+    {
+      "id": "like",
+      "title": "좋아요 등록",
+      "method": "like",
+      "tables": [
+        "posts",
+        "app_users",
+        "post_likes"
+      ],
+      "steps": [
+        {
+          "label": "게시글 확인·잠금",
+          "table": "posts"
+        },
+        {
+          "label": "사용자 조회",
+          "table": "app_users"
+        },
+        {
+          "label": "중복 확인 후 INSERT",
+          "table": "post_likes"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 59
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 59,
+          "code": "!likes.existsByPostIdAndUserId(id, actor)"
+        },
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 59,
+          "code": "new PostLike(p, u)"
+        }
+      ]
+    },
+    {
+      "id": "unlike",
+      "title": "좋아요 취소",
+      "method": "unlike",
+      "tables": [
+        "posts",
+        "post_likes"
+      ],
+      "steps": [
+        {
+          "label": "게시글 확인·잠금",
+          "table": "posts"
+        },
+        {
+          "label": "현재 사용자 좋아요 DELETE",
+          "table": "post_likes"
+        }
+      ],
+      "source": {
+        "file": "src/main/java/dev/portfolio/board/BoardService.java",
+        "line": 60
+      },
+      "evidence": [
+        {
+          "file": "src/main/java/dev/portfolio/board/BoardService.java",
+          "line": 60,
+          "code": "likes.findByPostIdAndUserId(id, actor).ifPresent(likes::delete)"
+        }
+      ]
+    }
+  ],
+  "rules": {
+    "titleMax": 120,
+    "bodyMax": 10000,
+    "commentMax": 1000,
+    "ownership": true,
+    "versionCheck": true,
+    "uniqueLike": [
+      "post_id",
+      "user_id"
+    ],
+    "deleteOrder": [
+      "comments",
+      "post_likes",
+      "posts"
+    ]
+  },
+  "sources": [
+    {
+      "file": "src/main/resources/schema.sql",
+      "sha256": "bf08a5120f1098e55f8dfa3085a4ce331e681fac7f93670dba2a8c5303214927"
+    },
+    {
+      "file": "src/main/java/dev/portfolio/board/BoardController.java",
+      "sha256": "7119ddef69d353a68c0f63e2bcb4205b5ec73aae646dfa972497ac93a967c720"
+    },
+    {
+      "file": "src/main/java/dev/portfolio/board/BoardService.java",
+      "sha256": "f503b0936356b133cf34345a2fc6b597ec71f29976b85faeee60df0f56482518"
+    },
+    {
+      "file": "src/main/java/dev/portfolio/board/AppUser.java",
+      "sha256": "6c9fc304eaa5423023d42c9c6b423eaa308feaa3ec392653669fdacadf547acf"
+    },
+    {
+      "file": "src/main/java/dev/portfolio/board/Post.java",
+      "sha256": "9e0912954866e486807a5a2307f7d2cdf8b96e711565da0b7e8741982ec5f0b6"
+    },
+    {
+      "file": "src/main/java/dev/portfolio/board/Comment.java",
+      "sha256": "8a94b348330026c0fdc6733d5ca4a54acd9a44f36ac55fc0b6fd7b4a45273340"
+    },
+    {
+      "file": "src/main/java/dev/portfolio/board/PostLike.java",
+      "sha256": "c5135ba11df27b5c507da80d3acc94e2ef86d54971ae6a3819c6572e560eb3af"
+    }
+  ]
+}
