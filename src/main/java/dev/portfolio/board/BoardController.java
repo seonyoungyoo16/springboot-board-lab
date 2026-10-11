@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,5 +27,13 @@ public class BoardController {
     @PutMapping("/posts/{id}/comments/{commentId}") public BoardService.CommentView updateComment(@PathVariable Long id, @PathVariable Long commentId, @RequestHeader(value = "X-Demo-User", defaultValue = "1") Long actor, @Valid @RequestBody CommentInput input) { return service.updateComment(id, commentId, actor, input.body()); }
     @DeleteMapping("/posts/{id}/comments/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void deleteComment(@PathVariable Long id, @PathVariable Long commentId, @RequestHeader(value = "X-Demo-User", defaultValue = "1") Long actor) { service.deleteComment(id, commentId, actor); }
     @PutMapping("/posts/{id}/likes/me") public BoardService.PostView like(@PathVariable Long id, @RequestHeader(value = "X-Demo-User", defaultValue = "1") Long actor) { return service.like(id, actor); }
+    @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public BoardService.PostView createMultipart(@RequestHeader(value = "X-Demo-User", defaultValue = "1") Long actor, @Valid @RequestPart("data") CreatePost data, @RequestPart("image") MultipartFile image) { return service.createMultipart(actor, data.title(), data.body(), image); }
+    @GetMapping("/images/{id}")
+    public ResponseEntity<byte[]> readImage(@PathVariable Long id) {
+        var info = service.imageInfo(id);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(info.contentType())).header("X-Content-Type-Options", "nosniff").cacheControl(CacheControl.noCache()).body(service.readImage(id));
+    }
     @DeleteMapping("/posts/{id}/likes/me") public BoardService.PostView unlike(@PathVariable Long id, @RequestHeader(value = "X-Demo-User", defaultValue = "1") Long actor) { return service.unlike(id, actor); }
 }

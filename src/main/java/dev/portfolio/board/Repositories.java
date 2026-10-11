@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 interface UserRepository extends JpaRepository<AppUser, Long> {}
+interface ImageRepository extends JpaRepository<PostImage, Long> {
+    List<PostImage> findByPostIdOrderByIdAsc(Long postId);
+    void deleteByPostId(Long postId);
+}
 interface PostRepository extends JpaRepository<Post, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from Post p where p.id = :id")

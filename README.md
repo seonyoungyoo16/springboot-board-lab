@@ -50,3 +50,9 @@ POST/PUT JSON: 글은 `title`, `body`(수정은 `version` 추가), 댓글은 `bo
 
 ## 소스 기반 시각화
 `scripts/export-model.mjs`는 실제 `schema.sql`, JPA entity, controller, service, validation 선언을 읽고 FK 관계·API·흐름·소스 위치와 SHA-256을 추출합니다. 추출 결과와 현재 Git commit으로 포트폴리오 프로젝트 상세를 구성합니다.
+
+## 멀티파트 데이터 + 이미지
+새 글에 PNG/JPEG 이미지 한 장을 첨부할 수 있습니다 (2MB, 4096×4096 이하).
+POST /api/posts (multipart/form-data)의 data 파트는 application/json {title, body}, image 파트는 원본 파일 바이너리입니다. FormData 사용 시 Content-Type 헤더를 직접 지정하지 않습니다.
+이미지는 post_images BLOB에 저장되며 게시글과 한 트랜잭션으로 처리됩니다. 응답 images의 url을 GET /api/images/{id}로 조회합니다. 글 삭제 시 이미지도 먼저 삭제합니다. 파일 형식과 실제 이미지 내용이 일치해야 합니다.
+기존 JSON 글 작성 API도 유지합니다. 브라우저 체험과 달리 이 서버의 이미지 데이터는 H2에 저장됩니다.
