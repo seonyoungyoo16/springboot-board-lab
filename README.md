@@ -3,7 +3,9 @@
 Spring Boot 3.5.16 · Java 21 · Spring Data JPA · H2로 만든 간단한 게시판입니다. 글 작성·조회·수정·삭제, 댓글 작성·수정·삭제, 사용자별 좋아요 등록·취소를 지원합니다.
 
 ## 실행
-Windows(Java 21 필요):
+Windows에서는 Java 21을 준비한 뒤 저장소 루트의 PowerShell에서 실행합니다.
+첫 실행 시 저장소의 `.mvn-runtime/`에 Maven이 없으면 `scripts/maven.ps1`이 Maven 3.9.9를 내려받아 그곳에 압축을 풉니다. 다운로드에는 인터넷 연결이 필요하며 이후 실행에서는 내려받은 Maven을 재사용합니다.
+
 ```powershell
 .\scripts\maven.ps1 spring-boot:run
 ```
@@ -13,16 +15,25 @@ mvn spring-boot:run
 ```
 http://localhost:8088 에서 실제 API를 사용하는 UI가 열립니다. H2 파일 DB는 `data/`에 저장합니다.
 
-## 검증과 패키지
+## 로컬 검증과 패키지
+Windows PowerShell에서 테스트를 실행하고 JAR를 빌드합니다.
+
 ```powershell
 .\scripts\maven.ps1 verify
+```
+
+Maven이 설치된 환경에서는 `mvn verify`를 실행해도 됩니다. 빌드한 JAR는 다음 명령으로 실행합니다.
+
+```powershell
 java -jar target/springboot-board-lab-1.0.0.jar
 ```
 ```sh
 docker build -t board-lab .
 docker run --rm -p 8088:8088 -v board-data:/app/data board-lab
 ```
-GitHub Actions 설정은 `docs/ci-template.yml`에 제공합니다. 현재 GitHub 연결의 workflow 권한이 없어 활성화하지 않았습니다. `.github/workflows/ci.yml`로 옮겨 등록하면 테스트 후 실행 JAR를 artifact로 제공합니다. GitHub에 소스를 게시하는 것과 Java 서버를 클라우드에서 실행하는 것은 별개입니다.
+## GitHub 검증
+- [빌드·테스트 워크플로 예시](docs/ci-template.yml)는 GitHub Actions에서 `mvn -B verify`를 실행하고 빌드한 JAR를 아티팩트로 업로드하는 예시입니다.
+- [TaskDesk 이슈 연결 검사](.github/workflows/taskdesk-issue-policy.yml)는 GitHub에서 `main` 또는 기본 브랜치를 대상으로 하는 PR을 검사합니다. PR 브랜치가 `issue/번호-설명` 형식인지, 해당 이슈가 같은 저장소에 PR 생성 전에 등록됐는지, PR 본문에 `Closes #번호`가 별도 줄로 있는지 확인합니다. 로컬 Maven 검증과 별도로 실행됩니다.
 
 ## 설계
 - `app_users` 1:N `posts` (`author_id`)
